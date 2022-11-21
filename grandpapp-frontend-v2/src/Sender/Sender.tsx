@@ -26,7 +26,7 @@ const Sender: React.FC = (props) => {
             // implement debounce
             if (transcript && transcript.length > 0 && submitted) {
                 const timeout = setTimeout(async () => {
-                    axios.post('http://192.168.0.22:3001/listen', { user: name, transcript: transcript, color: color })
+                    axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
                 }, 200);
         
                 return () => {

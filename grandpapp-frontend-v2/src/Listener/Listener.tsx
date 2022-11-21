@@ -9,7 +9,7 @@ const Listener: React.FC = (props) => {
     useEffect(() => {
         setEventSource(() => {
             let eventSource: EventSource;
-            eventSource = new EventSource('http://192.168.0.22:3001/listen');
+            eventSource = new EventSource('https://grandappv2.onrender.com/listen');
             
             eventSource.onopen = () => {
                 console.log('event source opened');
