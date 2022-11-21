@@ -1,0 +1,28 @@
+.mic {
+    display: flex;
+    font-size: 10rem;
+    align-items: center; 
+    margin-top: 2rem;
+    flex-direction: column;
+}
+
+.disabled {
+    background-color: gray !important;
+    border-color: lightgray !important;
+    color: white !important;
+    cursor: not-allowed !important;
+}
+
+.mic:hover {
+    color: gray;
+    cursor: pointer;
+}
+
+.yes-button {
+    padding: 8px;
+    background-color: white;
+    border-radius: 6px;
+    font-size: 1.5rem;
+    border: 2px solid green;
+    color: green;
+  }

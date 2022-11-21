@@ -1,0 +1,27 @@
+.yes-button {
+  padding: 8px;
+  background-color: white;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  border: 2px solid green;
+  color: green;
+}
+
+.yes-button:hover {
+  cursor: pointer;
+  background-color: rgb(221, 246, 221);
+}
+
+.no-button {
+  padding: 8px;
+  font-size: 1.5rem;
+  background-color: white;
+  border-radius: 6px;
+  border: 2px solid orange;
+  color: orange;
+}
+
+.no-button:hover {
+  cursor: pointer;
+  background-color: rgb(244, 232, 232);
+}
