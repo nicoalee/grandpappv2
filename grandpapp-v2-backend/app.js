@@ -49,6 +49,6 @@ app.post('/listen', (req, res) => {
     res.send({ status: 200 })
 });
 
-app.listen(3001, () => {
+app.listen(3001, '0.0.0.0', () => {
     console.log('app is listening on 3001');
 });
