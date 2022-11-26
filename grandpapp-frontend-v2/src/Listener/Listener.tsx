@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const Listener: React.FC = (props) => {
     const [eventSource ,setEventSource] = useState<EventSource>();
     const [messageHistory, setMessageHistory] = useState<{ user: string, color: string, message: string }[]>([])
+    const [connected, setConnected] = useState(false);
 
     const elementRef = useRef<HTMLDivElement>(null);
 
@@ -12,7 +13,7 @@ const Listener: React.FC = (props) => {
             eventSource = new EventSource('https://grandappv2.onrender.com/listen');
             
             eventSource.onopen = () => {
-                console.log('event source opened');
+                setConnected(true)
             }
             eventSource.onmessage = (e: any) => {
                 setMessageHistory((prevMessageHistory) => {
@@ -34,6 +35,7 @@ const Listener: React.FC = (props) => {
         return () => {
             setEventSource((eventSource) => {
                 if (eventSource) eventSource.close();
+                setConnected(false)
                 return undefined;
             })
         }
@@ -48,8 +50,17 @@ const Listener: React.FC = (props) => {
 
     return (
         <div ref={elementRef} style={{ padding: '2rem' }}>
+            <div style={{
+                fontSize: '1rem',
+                position: 'absolute',
+                backgroundColor: 'white',
+                padding: '1rem',
+                right: 0,
+                top: 0,
+                color: connected ? 'green' : 'red'
+            }}>{ connected ? 'CONNECTED' : 'NOT CONNECTED' }</div>
             {messageHistory.length === 0 && (
-                <div style={{ color: '#afaf00' }}>No messages</div>
+                <div style={{ color: '#afaf00', fontSize: '6rem' }}>No messages</div>
             )}
             {messageHistory.map((messageObj, index) => (
                 <div key={index} style={{ backgroundColor: messageObj.color, color: 'white', borderRadius: '4px', padding: '1rem', marginBottom: '0.5rem' }}>
