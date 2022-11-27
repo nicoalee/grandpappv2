@@ -83,12 +83,11 @@ const Sender: React.FC = (props) => {
                         <p>{transcript}</p>
                     </>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', padding: '1rem' }}>
                         <h1>What is your name?</h1>
                         <input
                             placeholder='name'
                             style={{
-                                width: '300px',
                                 padding: '1rem',
                                 marginBottom: '1rem',
                             }}
