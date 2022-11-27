@@ -11,7 +11,7 @@ enum ELang {
     'ja' = 'ja'
 }
 
-const Sender: React.FC<{ isGrandma: boolean }> = (props) => {
+const Sender: React.FC = (props) => {
     const [name, setName] = useState('');
     const [color, setColor] = useState<string>('');
     const [language, setLanguage] = useState<ELang>(ELang['en-US']);
@@ -25,19 +25,13 @@ const Sender: React.FC<{ isGrandma: boolean }> = (props) => {
         browserSupportsSpeechRecognition
     } = useSpeechRecognition({  });
 
-    useEffect(() => {
-        if (props.isGrandma) {
-            setName('Mitsuko');
-            setColor('blue');
-            setLanguage(ELang.ja);
-            setSubmitted(true);
-        }
-    }, [props.isGrandma])
-
     const disabled = color === undefined || color.length === 0 || name.length === 0 || language.length === 0;
 
     const handleSubmit = () => {
         if (name.length && name.length > 0 && color && color.length > 0) {
+            localStorage.setItem('grandpapp-name', name);
+            localStorage.setItem('grandpapp-color', color);
+            localStorage.setItem('grandpapp-language', language);
             setSubmitted(true)
         } 
     }
@@ -55,9 +49,9 @@ const Sender: React.FC<{ isGrandma: boolean }> = (props) => {
         
         if (transcript.length > 0) {
             // PROD
-            axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
+            // axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
             // DEV
-            // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
+            axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
         }
     }
 
@@ -66,6 +60,19 @@ const Sender: React.FC<{ isGrandma: boolean }> = (props) => {
         SpeechRecognition.stopListening();
         setIsListening(false);
     }
+
+    useEffect(() => {
+        const name = localStorage.getItem('grandpapp-name');
+        const color = localStorage.getItem('grandpapp-color');
+        const language = localStorage.getItem('grandpapp-language') as ELang;
+
+        setName(name || '');
+        setColor(color || '');
+        setLanguage(language || ELang['en-US'])
+
+        console.log(name);
+        
+    }, [])
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -97,10 +104,15 @@ const Sender: React.FC<{ isGrandma: boolean }> = (props) => {
                                     padding: '1rem',
                                     marginBottom: '1rem',
                                 }}
-                                onChange={(event) => setName(event.target.value)} />
+                                value={name}
+                                onChange={(event) => {
+                                    setName(event.target.value);
+                                }} />
                             <select
                                 value={color}
-                                onChange={(event) => setColor(event.target.value)}
+                                onChange={(event) => {
+                                    setColor(event.target.value)
+                                }}
                                 className="select"
                                 style={{ marginBottom: '1rem' }}>
                                 <option value="">select color</option>
@@ -115,7 +127,9 @@ const Sender: React.FC<{ isGrandma: boolean }> = (props) => {
                             </select>
                             <select
                                 value={language}
-                                onChange={(event) => setLanguage(event.target.value as ELang)}
+                                onChange={(event) => {
+                                    setLanguage(event.target.value as ELang)
+                                }}
                                 className="select"
                             >
                                 <option value="">select language</option>
@@ -124,7 +138,7 @@ const Sender: React.FC<{ isGrandma: boolean }> = (props) => {
                                 <option value={ELang['zh-CN']}>Chinese</option>
                             </select>
             
-                            <button onClick={handleSubmit} className={`yes-button ${disabled ? 'disabled' : ''}`} style={{ marginTop: '1rem' }}>Submit</button>
+                            <button onClick={handleSubmit} className={`yes-button ${disabled ? 'disabled' : ''}`} style={{ marginTop: '1rem', cursor: 'pointer' }}>Submit</button>
                         </div>
                     )
                 ) : (

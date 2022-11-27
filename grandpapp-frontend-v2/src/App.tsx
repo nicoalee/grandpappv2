@@ -18,10 +18,6 @@ const App = () => {
             </div>
             <div>
               <button onClick={() => setIsListener(true)} className="yes button" style={{ marginRight: '1rem' }}>Yes, I am grandpa.</button>
-              <button onClick={() => {
-                setIsListener(false);
-                setIsGrandma(true);
-              }} className="warn button" style={{ marginRight: '1rem' }}>No, I am grandma.</button>
               <button onClick={() => setIsListener(false)} className="no button">No, I am not grandpa.</button>
             </div>
           </div>
@@ -29,7 +25,7 @@ const App = () => {
           isListener ? (
             <Listener />
           ) : (
-            <Sender isGrandma={isGrandma} />
+            <Sender />
           )
         )
       }

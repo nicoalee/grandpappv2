@@ -9,9 +9,9 @@ const Listener: React.FC = (props) => {
     useEffect(() => {
         let eventSource: EventSource;
         // PROD
-        eventSource = new EventSource('https://grandappv2.onrender.com/listen');
+        // eventSource = new EventSource('https://grandappv2.onrender.com/listen');
         // DEV
-        // eventSource = new EventSource('http://localhost:3001/listen');
+        eventSource = new EventSource('http://localhost:3001/listen');
 
         eventSource.onopen = (event: any) => {
             setConnected(true)
@@ -55,11 +55,12 @@ const Listener: React.FC = (props) => {
         <div ref={elementRef} style={{ padding: '2rem' }}>
             <div style={{
                 fontSize: '1rem',
-                position: 'absolute',
-                backgroundColor: 'white',
+                position: 'sticky',
+                backgroundColor: connected ? 'lightgreen' : '#ff9a93',
                 padding: '1rem',
                 right: 0,
                 top: 0,
+                textAlign: 'center',
                 color: connected ? 'green' : 'red'
             }}>{ connected ? 'CONNECTED' : 'NOT CONNECTED' }</div>
             {messageHistory.length === 0 && (
