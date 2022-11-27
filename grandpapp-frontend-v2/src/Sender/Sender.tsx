@@ -65,6 +65,11 @@ const Sender: React.FC = (props) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {
+                !browserSupportsSpeechRecognition && (
+                    <span>This browser does not support speech recognition</span>
+                )
+            }
+            {
                 submitted ? (
                     <>
                         <p>Click to record and send your voice</p>
