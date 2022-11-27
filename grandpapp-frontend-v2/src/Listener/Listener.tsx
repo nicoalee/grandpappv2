@@ -8,36 +8,40 @@ const Listener: React.FC = (props) => {
     const elementRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setEventSource(() => {
-            let eventSource: EventSource;
-            eventSource = new EventSource('https://grandappv2.onrender.com/listen');
+        let eventSource: EventSource;
+        // PROD
+        // eventSource = new EventSource('https://grandappv2.onrender.com/listen');
+        // DEV
+        eventSource = new EventSource('http://localhost:3001/listen');
+
+        eventSource.onopen = (event: any) => {
+            setConnected(true)
+        }
+
+        eventSource.onmessage = (e: any) => {
+            console.log('hello');
             
-            eventSource.onopen = () => {
-                setConnected(true)
-            }
-            eventSource.onmessage = (e: any) => {
-                setMessageHistory((prevMessageHistory) => {
-                    const receivedMessageObj = JSON.parse(e.data);                    
-                    const newMessageHistory = [...prevMessageHistory];
-                    newMessageHistory.push({
-                        user: receivedMessageObj.user,
-                        message: receivedMessageObj.transcript,
-                        color: receivedMessageObj.color
-                    })
-                    
-                    return newMessageHistory;
+            setMessageHistory((prevMessageHistory) => {
+                const receivedMessageObj = JSON.parse(e.data);                    
+                const newMessageHistory = [...prevMessageHistory];
+                newMessageHistory.push({
+                    user: receivedMessageObj.user,
+                    message: receivedMessageObj.transcript,
+                    color: receivedMessageObj.color
                 })
-            }
-        
-            return eventSource;
-        })
+                
+                return newMessageHistory;
+            })
+        }
+
+        eventSource.onerror = (e: any) => {
+            eventSource.close();
+            setConnected(false)
+        }
 
         return () => {
-            setEventSource((eventSource) => {
-                if (eventSource) eventSource.close();
-                setConnected(false)
-                return undefined;
-            })
+            eventSource.close();
+            setConnected(false)
         }
     }, [])
 

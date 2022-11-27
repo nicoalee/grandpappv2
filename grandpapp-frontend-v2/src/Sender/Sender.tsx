@@ -25,23 +25,6 @@ const Sender: React.FC = (props) => {
         resetTranscript,
         browserSupportsSpeechRecognition
     } = useSpeechRecognition({  });
-    
-      useEffect(() => {
-        if (isListening) {
-          console.log('started listening');
-        } else {
-            // implement debounce
-            if (transcript && transcript.length > 0 && submitted) {
-                const timeout = setTimeout(async () => {
-                    axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
-                }, 200);
-        
-                return () => {
-                    clearTimeout(timeout);
-                };
-            }
-        }
-      }, [color, name, submitted, transcript, isListening])
 
     const disabled = color === undefined || color.length === 0 || name.length === 0 || language.length === 0;
 
@@ -60,6 +43,20 @@ const Sender: React.FC = (props) => {
     const handleStopListen = () => {
         SpeechRecognition.stopListening();
         setIsListening(false)
+
+        // PROD
+        // axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
+        // DEV
+
+        if (transcript.length > 0) {
+            axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
+        }
+    }
+
+    const handleCancelListen = () => {
+        resetTranscript();
+        SpeechRecognition.stopListening();
+        setIsListening(false);
     }
 
     return (
@@ -80,7 +77,12 @@ const Sender: React.FC = (props) => {
                                 <FontAwesomeIcon onClick={handleStartListen} className='mic' style={{ color: isListening ? 'green' : 'gray' }} icon={faMicrophone} />
                             )
                         }
-                        <p>{transcript}</p>
+                        {isListening && (
+                            <button onClick={handleCancelListen} style={{ marginTop: '1rem', maxWidth: '300px' }} className='button no'>CANCEL</button>
+                        )}
+                        <div style={{ padding: '1rem' }}>
+                            <p>{transcript}</p>
+                        </div>
                     </>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '1rem' }}>

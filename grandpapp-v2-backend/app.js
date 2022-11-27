@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const { response } = require('express');
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -16,23 +17,38 @@ const headers = {
 // http://192.168.0.22:3001/listen
 // http://Nicholass-MacBook-Pro.local:3000
 
-let mainClient;
+const clients = [];
+
+const updateAllClients = (update) => {
+    clients.forEach((client) => {
+        client.response.write(update)
+    })
+}
 
 app.get('/listen', (req, res) => {
-    console.log(`received request: ${JSON.stringify(req.body)}`)
-    if (mainClient === undefined) {
-        console.log('main client connected')
-        res.writeHead(200, headers)
-        mainClient = res;
-        
-        req.on('close', () => {
-            console.log('main client disconnected')
-            mainClient = undefined;
-            res.end();
-        });
-    } else {
-        res.writeHead(401)
-    }
+    console.log(`received request: ${JSON.stringify(req.headers)}\n`)
+    
+    const newClient = {
+        id: Date.now(),
+        response: res
+    };
+    console.log(`client added: ${newClient.id}`)
+    clients.push(newClient);
+
+    res.writeHead(200, headers)
+    // send initial message to init connection
+    res.write('update: connected\n\n')
+    res.flushHeaders();
+
+    req.on('close', () => {
+        console.log(`disconnecting: ${newClient.id}`)
+        const clientToCloseIndex = clients.findIndex(c => c.id === newClient.id);
+        if (clientToCloseIndex >= 0) {
+            const clientToClose = clients[clientToCloseIndex];
+            clientToClose.response.end();
+            clients.splice(clientToCloseIndex, 1);
+        }
+    });
 });
 
 app.get('/test', (req, res) => {
@@ -41,14 +57,15 @@ app.get('/test', (req, res) => {
 
 app.post('/listen', (req, res) => {
     const body = req.body;
-    console.log(`sending to main client: ${mainClient !== undefined}`)
-    if (mainClient) {
+    console.log(`sending to clients: ${clients.length > 0}`)
+    if (clients.length > 0) {
         console.log(body)
-        mainClient.write(`data: ${JSON.stringify(body)}\n\n`);
+        updateAllClients(`data: ${JSON.stringify(body)}\n\n`)
     }
     res.send({ status: 200 })
 });
 
-app.listen(3001, '0.0.0.0', () => {
+// app.listen(3001, '0.0.0.0', () => {
+app.listen(3001, '127.0.0.1', () => {
     console.log('app is listening on 3001');
 });
