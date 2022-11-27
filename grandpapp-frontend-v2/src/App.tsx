@@ -10,16 +10,16 @@ const App = () => {
   const [isListener, setIsListener] = useState<boolean>();
 
   return (
-    <div style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+    <div style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
       {
         isListener === undefined ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem' }}>
             <div style={{ marginBottom: '1rem' }}>
               <h1>Are you grandpa?</h1>
             </div>
             <div>
-              <button onClick={() => setIsListener(true)} className="yes-button" style={{ marginRight: '1rem' }}>Yes, I am grandpa.</button>
-              <button onClick={() => setIsListener(false)} className="no-button">No, I am not grandpa.</button>
+              <button onClick={() => setIsListener(true)} className="yes button" style={{ marginRight: '1rem' }}>Yes, I am grandpa.</button>
+              <button onClick={() => setIsListener(false)} className="no button">No, I am not grandpa.</button>
             </div>
           </div>
         ) : (
@@ -30,13 +30,6 @@ const App = () => {
           )
         )
       }
-
-      {/* <button onClick={() => SpeechRecognition.startListening()}>Start</button>
-      <button onClick={() => SpeechRecognition.stopListening()}>Stop</button>
-      <button onClick={() => resetTranscript()}>Reset</button>
-      <div>listening: {listening ? 'YES' : 'NO'}</div>
-      <p>{transcript}</p>
-      <div>{JSON.stringify(browserSupportsSpeechRecognition)}</div> */}
     </div>
   );
 }

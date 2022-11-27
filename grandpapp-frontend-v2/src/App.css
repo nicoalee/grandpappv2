@@ -1,27 +1,37 @@
-.yes-button {
+.button {
   padding: 8px;
   background-color: white;
-  border-radius: 6px;
   font-size: 1.5rem;
+  border-radius: 6px;
+}
+
+.yes {
   border: 2px solid green;
   color: green;
 }
 
-.yes-button:hover {
+.button:hover {
   cursor: pointer;
-  background-color: rgb(221, 246, 221);
+  background-color: rgba(238, 238, 238, 0.556);
 }
 
-.no-button {
-  padding: 8px;
-  font-size: 1.5rem;
-  background-color: white;
-  border-radius: 6px;
+.no {
   border: 2px solid orange;
   color: orange;
 }
 
-.no-button:hover {
+/* .no-button:hover {
   cursor: pointer;
   background-color: rgb(244, 232, 232);
+} */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .button {
+    padding: 8px;
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    border-radius: 6px;
+  }
 }

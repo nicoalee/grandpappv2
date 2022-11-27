@@ -96,7 +96,8 @@ const Sender: React.FC = (props) => {
                         <select
                             value={color}
                             onChange={(event) => setColor(event.target.value)}
-                            style={{ width: '100%', padding: '1rem', marginBottom: '1rem' }}>
+                            className="select"
+                            style={{ marginBottom: '1rem' }}>
                             <option value="">select color</option>
                             <option value="green">green</option>
                             <option value="blue">blue</option>
@@ -110,7 +111,8 @@ const Sender: React.FC = (props) => {
                         <select
                             value={language}
                             onChange={(event) => setLanguage(event.target.value as ELang)}
-                            style={{ width: '100%', padding: '1rem' }}>
+                            className="select"
+                        >
                             <option value="">select language</option>
                             <option value={ELang['en-US']}>English</option>
                             <option value={ELang.ja}>Japanese</option>
