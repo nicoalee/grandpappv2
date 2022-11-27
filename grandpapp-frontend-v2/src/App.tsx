@@ -1,13 +1,12 @@
 import './App.css';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import Listener from './Listener/Listener';
 import Sender from './Sender/Sender';
 
 const App = () => {
   
   const [isListener, setIsListener] = useState<boolean>();
+  const [isGrandma, setIsGrandma] = useState(false);
 
   return (
     <div style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -19,6 +18,10 @@ const App = () => {
             </div>
             <div>
               <button onClick={() => setIsListener(true)} className="yes button" style={{ marginRight: '1rem' }}>Yes, I am grandpa.</button>
+              <button onClick={() => {
+                setIsListener(false);
+                setIsGrandma(true);
+              }} className="warn button" style={{ marginRight: '1rem' }}>No, I am grandma.</button>
               <button onClick={() => setIsListener(false)} className="no button">No, I am not grandpa.</button>
             </div>
           </div>
@@ -26,7 +29,7 @@ const App = () => {
           isListener ? (
             <Listener />
           ) : (
-            <Sender />
+            <Sender isGrandma={isGrandma} />
           )
         )
       }

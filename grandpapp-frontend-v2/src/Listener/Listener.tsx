@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
 const Listener: React.FC = (props) => {
-    const [eventSource ,setEventSource] = useState<EventSource>();
     const [messageHistory, setMessageHistory] = useState<{ user: string, color: string, message: string }[]>([])
     const [connected, setConnected] = useState(false);
 
