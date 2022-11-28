@@ -50,9 +50,9 @@ const Sender: React.FC = (props) => {
         
         if (transcript.length > 0) {
             // PROD
-            // axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
+            axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
             // DEV
-            axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
+            // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
         }
     }
 
