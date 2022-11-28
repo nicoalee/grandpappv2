@@ -1,5 +1,4 @@
-import process from 'node:process';
-
+const process = require('node:process');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -16,7 +15,6 @@ process
         console.log('Process exit event');
         console.log(code);
     })
-
 
 app.use(cors())
 app.use(bodyParser.json())
