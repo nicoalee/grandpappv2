@@ -1,8 +1,22 @@
+import process from 'node:process';
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { response } = require('express');
+
+process
+    .on('uncaughtException', (code) => {
+        console.log('Process uncaughtException event');
+        console.log(code);
+        process.exit(1);
+    })
+    .on('unhandledRejection', (code) => {
+        console.log('Process exit event');
+        console.log(code);
+    })
+
 
 app.use(cors())
 app.use(bodyParser.json())
