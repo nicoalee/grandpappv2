@@ -1,4 +1,4 @@
-const process = require('node:process');
+const process = require('process');
 const express = require('express');
 const app = express();
 const cors = require('cors');
