@@ -49,9 +49,9 @@ const Sender: React.FC = (props) => {
         
         if (transcript.length > 0) {
             // PROD
-            // axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
+            axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
             // DEV
-            axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
+            // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
         }
     }
 
@@ -92,7 +92,7 @@ const Sender: React.FC = (props) => {
                                 <button onClick={handleCancelListen} style={{ marginTop: '1rem', maxWidth: '300px' }} className='button no'>CANCEL</button>
                             )}
                             <div style={{ padding: '1rem' }}>
-                                <p>{transcript}</p>
+                                <p style={{ fontSize: '2rem' }}>{transcript}</p>
                             </div>
                         </>
                     ) : (
