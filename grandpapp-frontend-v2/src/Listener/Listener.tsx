@@ -9,9 +9,9 @@ const Listener: React.FC = (props) => {
     useEffect(() => {
         let eventSource: EventSource;
         // PROD
-        eventSource = new EventSource('https://grandappv2.onrender.com/listen');
+        // eventSource = new EventSource('https://grandappv2.onrender.com/listen');
         // DEV
-        // eventSource = new EventSource('http://localhost:3001/listen');
+        eventSource = new EventSource('http://localhost:3001/listen');
 
         eventSource.onopen = (event: any) => {
             setConnected(true)

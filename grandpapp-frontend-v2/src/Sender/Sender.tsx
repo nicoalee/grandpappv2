@@ -22,8 +22,9 @@ const Sender: React.FC = (props) => {
     const { 
         transcript,
         resetTranscript,
-        browserSupportsSpeechRecognition
-    } = useSpeechRecognition({  });
+        browserSupportsSpeechRecognition,
+        isMicrophoneAvailable
+    } = useSpeechRecognition();
 
     const disabled = color === undefined || color.length === 0 || name.length === 0 || language.length === 0;
 
@@ -42,22 +43,22 @@ const Sender: React.FC = (props) => {
         setIsListening(true);
     }
 
-    const handleStopListen = () => {
-        SpeechRecognition.stopListening();
+    const handleStopListen = async () => {
+        await SpeechRecognition.stopListening();
         setIsListening(false)
 
         
         if (transcript.length > 0) {
             // PROD
-            axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
+            // axios.post('https://grandappv2.onrender.com/listen', { user: name, transcript: transcript, color: color })
             // DEV
-            // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
+            axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
         }
     }
 
-    const handleCancelListen = () => {
-        resetTranscript();
-        SpeechRecognition.stopListening();
+    const handleCancelListen = async () => {
+        await SpeechRecognition.abortListening();
+        resetTranscript()
         setIsListening(false);
     }
 
@@ -68,16 +69,13 @@ const Sender: React.FC = (props) => {
 
         setName(name || '');
         setColor(color || '');
-        setLanguage(language || ELang['en-US'])
-
-        console.log(name);
-        
+        setLanguage(language || ELang['en-US'])        
     }, [])
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {
-                browserSupportsSpeechRecognition ? (
+                (browserSupportsSpeechRecognition || isMicrophoneAvailable) ? (
                     submitted ? (
                         <>
                             <p>Click to record and send your voice</p>
@@ -142,7 +140,7 @@ const Sender: React.FC = (props) => {
                         </div>
                     )
                 ) : (
-                    <span>This browser does not support speech recognition</span>
+                    <span>This browser does not support speech recognition, or the mic is not available</span>
                 )
             }
         </div>
