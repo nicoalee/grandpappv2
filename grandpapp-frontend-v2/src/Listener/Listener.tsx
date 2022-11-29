@@ -38,8 +38,15 @@ const Listener: React.FC = (props) => {
             setConnected(false)
         }
 
+        const cleanup = () => {
+            if (eventSource.OPEN) eventSource.close();
+        }
+
+        window.addEventListener('beforeunload', cleanup)
+
         return () => {
-            eventSource.close();
+            window.removeEventListener('beforeunload', cleanup)
+            if (eventSource.OPEN) eventSource.close();
             setConnected(false)
         }
     }, [])
