@@ -32,6 +32,7 @@ const headers = {
 const clients = [];
 
 const updateAllClients = (update) => {
+    console.log(`sent message out to ${clients.length} client(s)`)
     clients.forEach((client) => {
         client.response.write(update)
     })
@@ -53,12 +54,15 @@ app.get('/listen', (req, res) => {
     res.flushHeaders();
 
     req.on('close', () => {
-        console.log(`disconnecting: ${newClient.id}`)
         const clientToCloseIndex = clients.findIndex(c => c.id === newClient.id);
         if (clientToCloseIndex >= 0) {
+            console.log(`disconnecting: ${newClient.id}`)
             const clientToClose = clients[clientToCloseIndex];
             clientToClose.response.end();
             clients.splice(clientToCloseIndex, 1);
+            console.log(`${clients.length} clients still connected`)
+        } else {
+            console.log('tried to close client but could not find it in list')
         }
     });
 });
@@ -77,7 +81,9 @@ app.post('/listen', (req, res) => {
     res.send({ status: 200 })
 });
 
-// app.listen(3001, '0.0.0.0', () => {
-app.listen(3001, '127.0.0.1', () => {
+// DEV
+// app.listen(3001, '127.0.0.1', () => {
+// PROD
+app.listen(3001, '0.0.0.0', () => {
     console.log('app is listening on 3001');
 });
