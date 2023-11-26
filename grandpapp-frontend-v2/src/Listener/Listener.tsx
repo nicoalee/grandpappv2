@@ -6,8 +6,6 @@ const Listener: React.FC = (props) => {
   >([]);
   const [connected, setConnected] = useState(false);
   const [debugData, setDebugData] = useState<any>({});
-  const [serviceWorker, setServiceWorker] =
-    useState<ServiceWorkerRegistration>();
 
   const elementRef = useRef<HTMLDivElement>(null);
 
@@ -65,9 +63,7 @@ const Listener: React.FC = (props) => {
 
       setDebugData((prev: any) => ({
         ...prev,
-        newRegistration: serviceWorker,
         newPermission: requestedPermission,
-        serviceWorker: !!serviceWorker,
       }));
 
       if (requestedPermission === "granted") {
@@ -81,7 +77,7 @@ const Listener: React.FC = (props) => {
     };
 
     showNotification();
-  }, [messageHistory, serviceWorker]);
+  }, [messageHistory]);
 
   useEffect(() => {
     const setupServiceWorker = async () => {
@@ -97,7 +93,6 @@ const Listener: React.FC = (props) => {
         initialPermission: requestedPermission,
       }));
       if (requestedPermission === "granted") {
-        setServiceWorker(registration);
         console.log({ registration });
         await registration.showNotification("Grandpapp", {
           body: "notifications registered!",
