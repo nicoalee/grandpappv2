@@ -86,11 +86,9 @@ const Listener: React.FC = (props) => {
 
       if (window.Notification.permission === "granted") {
         console.log({ registration });
-        await registration.showNotification("Grandpapp", {
-          body: "notification 1!",
-        });
-        await registration.showNotification("Grandpapp", {
-          body: "notification 2!",
+        const lastMessage = messageHistory[messageHistory.length - 1];
+        await registration.showNotification(lastMessage.user || "grandpapp", {
+          body: lastMessage.message || "Notifications enabled",
         });
       } else {
         alert("not granted permission");
