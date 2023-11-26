@@ -41,6 +41,7 @@ const Listener: React.FC = (props) => {
         ...prev,
         newRegistration: serviceWorker,
         newPermission: requestedPermission,
+        serviceWorker: !!serviceWorker,
       }));
 
       if (requestedPermission === "granted" && serviceWorker) {
