@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import addNotification from "react-push-notification";
 
 const Listener: React.FC = (props) => {
   const [messageHistory, setMessageHistory] = useState<
@@ -33,10 +32,10 @@ const Listener: React.FC = (props) => {
         return newMessageHistory;
       });
 
-      addNotification({
-        title: "warning",
-        native: true,
-      });
+      //   addNotification({
+      //     title: "warning",
+      //     native: true,
+      //   });
     };
 
     eventSource.onerror = (e: any) => {

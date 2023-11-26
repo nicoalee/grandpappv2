@@ -6,7 +6,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import axios from "axios";
-import addNotification from "react-push-notification";
 
 enum ELang {
   "en-US" = "en-US",
@@ -53,11 +52,20 @@ const Sender: React.FC = (props) => {
   const handleStopListen = async () => {
     await SpeechRecognition.stopListening();
     setIsListening(false);
-    console.log("notification");
-    addNotification({
-      title: "warning",
-      native: true,
-    });
+    const registration = await navigator.serviceWorker.register(
+      "serviceWorker.js",
+      { scope: "./" }
+    );
+
+    const requestedPermission = await window.Notification.requestPermission();
+    console.log(requestedPermission);
+    if (requestedPermission === "granted") {
+      console.log("granted");
+      await registration.showNotification("Hello World", {
+        body: "My first notification on iOS",
+      });
+    }
+
     return;
 
     // if (transcript.length > 0) {
