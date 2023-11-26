@@ -36,6 +36,7 @@ const Listener: React.FC = (props) => {
 
       const requestedPermission = await window.Notification.requestPermission();
       if (requestedPermission === "granted" && serviceWorker) {
+        console.log("showing notification");
         await serviceWorker.showNotification(receivedMessageObj.user, {
           body: receivedMessageObj.transcript,
         });
@@ -58,7 +59,7 @@ const Listener: React.FC = (props) => {
       if (eventSource.OPEN) eventSource.close();
       setConnected(false);
     };
-  }, []);
+  }, [serviceWorker]);
 
   useEffect(() => {
     const setupServiceWorker = async () => {
@@ -70,6 +71,7 @@ const Listener: React.FC = (props) => {
       const requestedPermission = await window.Notification.requestPermission();
       if (requestedPermission === "granted") {
         setServiceWorker(registration);
+        console.log("notifications registered");
         await registration.showNotification("Grandpapp", {
           body: "notifications registered!",
         });
@@ -104,7 +106,7 @@ const Listener: React.FC = (props) => {
         {connected ? "CONNECTED" : "NOT CONNECTED"}
       </div>
       {messageHistory.length === 0 && (
-        <div style={{ color: "#afaf00", fontSize: "4rem" }}>No messages</div>
+        <div style={{ color: "#afaf00", fontSize: "2.5rem" }}>No messages</div>
       )}
       {messageHistory.map((messageObj, index) => (
         <div
@@ -117,10 +119,12 @@ const Listener: React.FC = (props) => {
             marginBottom: "0.5rem",
           }}
         >
-          <h1 style={{ margin: 0, fontSize: "4rem" }}>
+          <h1 style={{ margin: 0, fontSize: "2.5rem" }}>
             <b>{messageObj.user}</b>
           </h1>
-          <div style={{ fontSize: "4rem" }}>{messageObj.message}</div>
+          <div style={{ fontSize: "2.5rem", wordBreak: "break-all" }}>
+            {messageObj.message}
+          </div>
         </div>
       ))}
     </div>
