@@ -80,9 +80,11 @@ const Listener: React.FC = (props) => {
         { scope: "./" }
       );
 
-      const requestedPermission = await window.Notification.requestPermission();
+      if (window.Notification.permission !== "granted") {
+        await window.Notification.requestPermission();
+      }
 
-      if (requestedPermission === "granted") {
+      if (window.Notification.permission === "granted") {
         console.log({ registration });
         await registration.showNotification("Grandpapp", {
           body: "notification 1!",
@@ -90,6 +92,8 @@ const Listener: React.FC = (props) => {
         await registration.showNotification("Grandpapp", {
           body: "notification 2!",
         });
+      } else {
+        alert("not granted permission");
       }
     };
 
