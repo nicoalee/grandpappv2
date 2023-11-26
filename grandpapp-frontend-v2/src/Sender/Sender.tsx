@@ -52,32 +52,17 @@ const Sender: React.FC = (props) => {
   const handleStopListen = async () => {
     await SpeechRecognition.stopListening();
     setIsListening(false);
-    const registration = await navigator.serviceWorker.register(
-      "serviceWorker.js",
-      { scope: "./" }
-    );
 
-    const requestedPermission = await window.Notification.requestPermission();
-    console.log(requestedPermission);
-    if (requestedPermission === "granted") {
-      console.log("granted");
-      await registration.showNotification("Hello World", {
-        body: "My first notification on iOS",
+    if (transcript.length > 0) {
+      // PROD
+      axios.post("https://grandappv2.onrender.com/listen", {
+        user: name,
+        transcript: transcript,
+        color: color,
       });
+      // DEV
+      // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
     }
-
-    return;
-
-    // if (transcript.length > 0) {
-    //   // PROD
-    //   axios.post("https://grandappv2.onrender.com/listen", {
-    //     user: name,
-    //     transcript: transcript,
-    //     color: color,
-    //   });
-    //   // DEV
-    //   // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
-    // }
   };
 
   const handleCancelListen = async () => {

@@ -5,6 +5,8 @@ const Listener: React.FC = (props) => {
     { user: string; color: string; message: string }[]
   >([]);
   const [connected, setConnected] = useState(false);
+  const [serviceWorker, setServiceWorker] =
+    useState<ServiceWorkerRegistration>();
 
   const elementRef = useRef<HTMLDivElement>(null);
 
@@ -19,9 +21,9 @@ const Listener: React.FC = (props) => {
       setConnected(true);
     };
 
-    eventSource.onmessage = (e: any) => {
+    eventSource.onmessage = async (e: any) => {
+      const receivedMessageObj = JSON.parse(e.data);
       setMessageHistory((prevMessageHistory) => {
-        const receivedMessageObj = JSON.parse(e.data);
         const newMessageHistory = [...prevMessageHistory];
         newMessageHistory.push({
           user: receivedMessageObj.user,
@@ -32,10 +34,12 @@ const Listener: React.FC = (props) => {
         return newMessageHistory;
       });
 
-      //   addNotification({
-      //     title: "warning",
-      //     native: true,
-      //   });
+      const requestedPermission = await window.Notification.requestPermission();
+      if (requestedPermission === "granted" && serviceWorker) {
+        await serviceWorker.showNotification(receivedMessageObj.user, {
+          body: receivedMessageObj.transcript,
+        });
+      }
     };
 
     eventSource.onerror = (e: any) => {
@@ -54,6 +58,25 @@ const Listener: React.FC = (props) => {
       if (eventSource.OPEN) eventSource.close();
       setConnected(false);
     };
+  }, []);
+
+  useEffect(() => {
+    const setupServiceWorker = async () => {
+      const registration = await navigator.serviceWorker.register(
+        "serviceWorker.js",
+        { scope: "./" }
+      );
+
+      const requestedPermission = await window.Notification.requestPermission();
+      if (requestedPermission === "granted") {
+        setServiceWorker(registration);
+        await registration.showNotification("Grandpapp", {
+          body: "notifications registered!",
+        });
+      }
+    };
+
+    setupServiceWorker();
   }, []);
 
   useEffect(() => {
