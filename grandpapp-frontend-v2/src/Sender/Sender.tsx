@@ -6,6 +6,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import axios from "axios";
+import addNotification from "react-push-notification";
 
 enum ELang {
   "en-US" = "en-US",
@@ -52,17 +53,23 @@ const Sender: React.FC = (props) => {
   const handleStopListen = async () => {
     await SpeechRecognition.stopListening();
     setIsListening(false);
+    console.log("notification");
+    addNotification({
+      title: "warning",
+      native: true,
+    });
+    return;
 
-    if (transcript.length > 0) {
-      // PROD
-      axios.post("https://grandappv2.onrender.com/listen", {
-        user: name,
-        transcript: transcript,
-        color: color,
-      });
-      // DEV
-      // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
-    }
+    // if (transcript.length > 0) {
+    //   // PROD
+    //   axios.post("https://grandappv2.onrender.com/listen", {
+    //     user: name,
+    //     transcript: transcript,
+    //     color: color,
+    //   });
+    //   // DEV
+    //   // axios.post('http://localhost:3001/listen', { user: name, transcript: transcript, color: color })
+    // }
   };
 
   const handleCancelListen = async () => {
