@@ -104,7 +104,7 @@ const Listener: React.FC = (props) => {
         {connected ? "CONNECTED" : "NOT CONNECTED"}
       </div>
       {messageHistory.length === 0 && (
-        <div style={{ color: "#afaf00", fontSize: "6rem" }}>No messages</div>
+        <div style={{ color: "#afaf00", fontSize: "4rem" }}>No messages</div>
       )}
       {messageHistory.map((messageObj, index) => (
         <div
@@ -120,7 +120,7 @@ const Listener: React.FC = (props) => {
           <h1 style={{ margin: 0, fontSize: "4rem" }}>
             <b>{messageObj.user}</b>
           </h1>
-          <div style={{ fontSize: "6rem" }}>{messageObj.message}</div>
+          <div style={{ fontSize: "4rem" }}>{messageObj.message}</div>
         </div>
       ))}
     </div>
