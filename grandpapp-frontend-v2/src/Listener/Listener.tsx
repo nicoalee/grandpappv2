@@ -19,17 +19,17 @@ const Listener: React.FC = (props) => {
       setConnected(true);
     };
 
-    eventSource.onmessage = async (e: any) => {
+    eventSource.onmessage = (e: any) => {
       const receivedMessageObj = JSON.parse(e.data);
       setMessageHistory((prevMessageHistory) => {
-        const newMessageHistory = [...prevMessageHistory];
-        newMessageHistory.push({
-          user: receivedMessageObj.user,
-          message: receivedMessageObj.transcript,
-          color: receivedMessageObj.color,
-        });
-
-        return newMessageHistory;
+        return [
+          ...prevMessageHistory,
+          {
+            user: receivedMessageObj.user,
+            message: receivedMessageObj.transcript,
+            color: receivedMessageObj.color,
+          },
+        ];
       });
     };
 
@@ -85,16 +85,16 @@ const Listener: React.FC = (props) => {
       if (requestedPermission === "granted") {
         console.log({ registration });
         await registration.showNotification("Grandpapp", {
-          body: "notifications registered!",
+          body: "notification 1!",
         });
         await registration.showNotification("Grandpapp", {
-          body: "notifications registered!",
+          body: "notification 2!",
         });
       }
     };
 
     setupServiceWorker();
-  }, []);
+  }, [messageHistory]);
 
   useEffect(() => {
     if (elementRef?.current) {
