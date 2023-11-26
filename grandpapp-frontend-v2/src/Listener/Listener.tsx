@@ -34,22 +34,6 @@ const Listener: React.FC = (props) => {
 
         return newMessageHistory;
       });
-
-      const requestedPermission = await window.Notification.requestPermission();
-
-      setDebugData((prev: any) => ({
-        ...prev,
-        newRegistration: serviceWorker,
-        newPermission: requestedPermission,
-        serviceWorker: !!serviceWorker,
-      }));
-
-      if (requestedPermission === "granted" && serviceWorker) {
-        console.log("showing notification");
-        await serviceWorker.showNotification(receivedMessageObj.user, {
-          body: receivedMessageObj.transcript,
-        });
-      }
     };
 
     eventSource.onerror = (e: any) => {
@@ -68,7 +52,36 @@ const Listener: React.FC = (props) => {
       if (eventSource.OPEN) eventSource.close();
       setConnected(false);
     };
-  }, [serviceWorker]);
+  }, []);
+
+  useEffect(() => {
+    const showNotification = async () => {
+      const registration = await navigator.serviceWorker.register(
+        "serviceWorker.js",
+        { scope: "./" }
+      );
+
+      const requestedPermission = await window.Notification.requestPermission();
+
+      setDebugData((prev: any) => ({
+        ...prev,
+        newRegistration: serviceWorker,
+        newPermission: requestedPermission,
+        serviceWorker: !!serviceWorker,
+      }));
+
+      if (requestedPermission === "granted") {
+        const lastMessage = messageHistory[messageHistory.length - 1];
+
+        console.log("showing notification");
+        await registration.showNotification(lastMessage.user, {
+          body: lastMessage.message,
+        });
+      }
+    };
+
+    showNotification();
+  }, [messageHistory, serviceWorker]);
 
   useEffect(() => {
     const setupServiceWorker = async () => {
