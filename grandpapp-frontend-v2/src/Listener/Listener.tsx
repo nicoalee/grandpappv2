@@ -5,6 +5,7 @@ const Listener: React.FC = (props) => {
     { user: string; color: string; message: string }[]
   >([]);
   const [connected, setConnected] = useState(false);
+  const [debugData, setDebugData] = useState<any>({});
   const [serviceWorker, setServiceWorker] =
     useState<ServiceWorkerRegistration>();
 
@@ -35,6 +36,13 @@ const Listener: React.FC = (props) => {
       });
 
       const requestedPermission = await window.Notification.requestPermission();
+
+      setDebugData((prev: any) => ({
+        ...prev,
+        newRegistration: serviceWorker,
+        newPermission: requestedPermission,
+      }));
+
       if (requestedPermission === "granted" && serviceWorker) {
         console.log("showing notification");
         await serviceWorker.showNotification(receivedMessageObj.user, {
@@ -69,9 +77,14 @@ const Listener: React.FC = (props) => {
       );
 
       const requestedPermission = await window.Notification.requestPermission();
+      setDebugData((prev: any) => ({
+        ...prev,
+        initialRegistration: registration,
+        initialPermission: requestedPermission,
+      }));
       if (requestedPermission === "granted") {
         setServiceWorker(registration);
-        console.log("notifications registered");
+        console.log({ registration });
         await registration.showNotification("Grandpapp", {
           body: "notifications registered!",
         });
@@ -125,6 +138,7 @@ const Listener: React.FC = (props) => {
           <div style={{ fontSize: "2.5rem", wordBreak: "break-all" }}>
             {messageObj.message}
           </div>
+          <div>{JSON.stringify(debugData, null, 4)}</div>
         </div>
       ))}
     </div>
