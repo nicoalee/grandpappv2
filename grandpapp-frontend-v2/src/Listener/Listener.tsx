@@ -5,7 +5,6 @@ const Listener: React.FC = (props) => {
     { user: string; color: string; message: string }[]
   >([]);
   const [connected, setConnected] = useState(false);
-  const [debugData, setDebugData] = useState<any>({});
 
   const elementRef = useRef<HTMLDivElement>(null);
 
@@ -52,32 +51,27 @@ const Listener: React.FC = (props) => {
     };
   }, []);
 
-  useEffect(() => {
-    const showNotification = async () => {
-      const registration = await navigator.serviceWorker.register(
-        "serviceWorker.js",
-        { scope: "./" }
-      );
+  // useEffect(() => {
+  //   const showNotification = async () => {
+  //     const registration = await navigator.serviceWorker.register(
+  //       "serviceWorker.js",
+  //       { scope: "./" }
+  //     );
 
-      const requestedPermission = await window.Notification.requestPermission();
+  //     const requestedPermission = await window.Notification.requestPermission();
 
-      setDebugData((prev: any) => ({
-        ...prev,
-        newPermission: requestedPermission,
-      }));
+  //     if (requestedPermission === "granted") {
+  //       const lastMessage = messageHistory[messageHistory.length - 1];
 
-      if (requestedPermission === "granted") {
-        const lastMessage = messageHistory[messageHistory.length - 1];
+  //       console.log("showing notification");
+  //       await registration.showNotification(lastMessage.user, {
+  //         body: lastMessage.message,
+  //       });
+  //     }
+  //   };
 
-        console.log("showing notification");
-        await registration.showNotification(lastMessage.user, {
-          body: lastMessage.message,
-        });
-      }
-    };
-
-    showNotification();
-  }, [messageHistory]);
+  //   showNotification();
+  // }, [messageHistory]);
 
   useEffect(() => {
     const setupServiceWorker = async () => {
@@ -87,13 +81,12 @@ const Listener: React.FC = (props) => {
       );
 
       const requestedPermission = await window.Notification.requestPermission();
-      setDebugData((prev: any) => ({
-        ...prev,
-        initialRegistration: registration,
-        initialPermission: requestedPermission,
-      }));
+
       if (requestedPermission === "granted") {
         console.log({ registration });
+        await registration.showNotification("Grandpapp", {
+          body: "notifications registered!",
+        });
         await registration.showNotification("Grandpapp", {
           body: "notifications registered!",
         });
@@ -147,7 +140,6 @@ const Listener: React.FC = (props) => {
           <div style={{ fontSize: "2.5rem", wordBreak: "break-all" }}>
             {messageObj.message}
           </div>
-          <div>{JSON.stringify(debugData, null, 4)}</div>
         </div>
       ))}
     </div>
